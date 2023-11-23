@@ -28,10 +28,12 @@ public class Main {
                 String saveToFile = scanner.nextLine().toLowerCase();
 
                 if (saveToFile.equals("да")) {
-                    System.out.print("Введите путь и имя файла (например, scan_results.txt): ");
+                    System.out.print("Введите путь и имя файла (например, scan_results): ");
                     String filePath = scanner.nextLine();
-                    saveResultsToFile(ipAddress, openPorts, filePath);
-                    System.out.println("Результаты сохранены в файл: " + filePath);
+                    System.out.print("Выберите формат файла (txt/csv): ");
+                    String fileFormat = scanner.nextLine().toLowerCase();
+                    saveResultsToFile(ipAddress, openPorts, filePath, fileFormat);
+                    System.out.println("Результаты сохранены в файл: " + filePath + "." + fileFormat);
                 }
             } else {
                 System.out.println("Устройство " + ipAddress + " не доступно.");
@@ -59,10 +61,18 @@ public class Main {
         return openPorts;
     }
 
-    private static void saveResultsToFile(String ipAddress, List<Integer> openPorts, String filePath) {
-        try (FileWriter writer = new FileWriter(filePath)) {
+    private static void saveResultsToFile(String ipAddress, List<Integer> openPorts, String filePath, String fileFormat) {
+        try (FileWriter writer = new FileWriter(filePath + "." + fileFormat)) {
             writer.write("Результаты сканирования для " + ipAddress + ":\n");
-            writer.write("Открытые порты: " + openPorts.toString());
+
+            if (fileFormat.equals("txt")) {
+                writer.write("Открытые порты: " + openPorts.toString());
+            } else if (fileFormat.equals("csv")) {
+                writer.write("Открытые порты\n");
+                for (int port : openPorts) {
+                    writer.write(port + "\n");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
