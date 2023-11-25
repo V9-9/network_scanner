@@ -54,7 +54,7 @@ public class Main {
                 openPorts.add(port);
                 socket.close();
             } catch (IOException e) {
-                // Порт закрыт
+
             }
         }
 
